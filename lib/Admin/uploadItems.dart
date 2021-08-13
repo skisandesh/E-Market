@@ -291,7 +291,7 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
       'tag' : _tagTextEditingController.text.trim(),
       'description': _discriptionTextEditingController.text.trim(),
       'title': _titleTextEditingController.text.trim(),
-      'price': _priceTextEditingController.text.trim(),
+      'price': double.parse(_priceTextEditingController.text.trim()),
       'publishedDate':DateTime.now(),
       'status': 'available',
       'thumbnailUrl': imageUrl,

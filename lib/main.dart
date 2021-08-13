@@ -42,11 +42,48 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Color(0xffe46b10),
         ),
-        home: SplashScreen()
+        home: FutureBuilder(
+            future: Firebase.initializeApp(),
+            builder: (ctx,snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('something went wrong'),);
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return SplashScreen();
+              }
+                return StreamBuilder(stream:FirebaseAuth.instance.authStateChanges(),builder: (ctx,userSnapShot){
+                  if(userSnapShot.hasData){
+                    return StoreHome();
+                  }
+                  return WelcomePage();
+                },
+                );
+            }
+        )
     )
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -59,19 +96,22 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    displaySplash();
+    // displaySplash();
   }
 
-  displaySplash(){
-    Timer(Duration(seconds: 2),()async{
-        if( EcommerceApp.auth.currentUser != null){
-            Route route = MaterialPageRoute(builder: (_)=> StoreHome());
-            Navigator.pushReplacement(context,route);
-        }
-        Route route = MaterialPageRoute(builder: (_)=> WelcomePage());
-        Navigator.pushReplacement(context, route);
-    });
-  }
+
+
+  // displaySplash(){
+  //   Timer(Duration(seconds: 2),(){
+  //       if( EcommerceApp.auth.authStateChanges() != null){
+  //           Route route = MaterialPageRoute(builder: (_)=> StoreHome());
+  //           Navigator.pushReplacement(context,route);
+  //       }
+  //       Route route = MaterialPageRoute(builder: (_)=> WelcomePage());
+  //       Navigator.pushReplacement(context, route);
+  //   }
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +133,7 @@ class _SplashScreenState extends State<SplashScreen>
                 Text('Welcome',style: TextStyle(fontSize: 30),),
                   SizedBox(height: 40,),
                   Image.asset('images/welcome.png'),
+                SizedBox(height: 15,),
                 SizedBox(height: 20.0,),
                 Text('World Best Online Store',style: TextStyle(color: Colors.white,fontSize: 20),)
             ],),
@@ -102,3 +143,5 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+
+
